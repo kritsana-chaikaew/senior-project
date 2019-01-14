@@ -1,0 +1,4 @@
+IP (?:-|%{IPV6}|%{IPV4})
+VIA (?:-|TIMER|%{IPV6}|%{IPV4})
+NUMBER (?:-|%{BASE10NUM})
+MAC (?:-|%{CISCOMAC}|%{WINDOWSMAC}|%{COMMONMAC})
