@@ -1,0 +1,18 @@
+name: Login Flatline rule
+type: flatline
+index: login-*
+threshold: 30
+timeframe:
+  minutes: 15
+realert:
+  minutes: 15
+filter:
+- term:
+    agent_type: "login-page"
+use_count_query: true
+doc_type: _doc
+alert:
+ - email:
+    email: "kritsana.chai@ku.th"
+ - command:
+    command: ["/bin/cat"]

@@ -1,0 +1,65 @@
+# Alert when the rate of events exceeds a threshold
+
+# (Optional)
+# Elasticsearch host
+# es_host: elasticsearch.example.com
+
+# (Optional)
+# Elasticsearch port
+# es_port: 14900
+
+# (Required)
+# Index to search, wildcard supported
+index: login*
+
+# (OptionaL) Connect with SSL to Elasticsearch
+#use_ssl: True
+
+# (Optional) basic-auth username and password for Elasticsearch
+#es_username: someusername
+#es_password: somepassword
+
+# (Required)
+# Rule name, must be unique
+name: Multiple Device Login rule
+
+# (Required)
+# Type of alert.
+# the frequency rule type alerts when num_events events occur with timeframe time
+type: cardinality
+
+# (Required, cardinality specific)
+# Count the number of unique values for this field
+cardinality_field:
+  script:
+    source: "[ doc['user'].value, doc['mac_address'].value ]"
+
+# (Required, frequency specific)
+# Alert when there less than 1 unique hostnames
+max_cardinality: 2
+
+timestamp_type: "unix_ms"
+timestamp_field: "login_timestamp"
+
+# (Required, frequency specific)
+# The cardinality is defined as the number of unique values for the most recent 4 hours
+timeframe:
+  minutes: 15
+
+# (Required)
+# A list of Elasticsearch filters used for find events
+# These filters are joined with AND and nested in a filtered query
+# For more info: http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html
+filter:
+- terms:
+    agent_type: ["login-page", "RELOGIN"]
+
+# (Required)
+# The alert is use when a match is found
+alert:
+- command:
+   command: "/bin/cat"
+
+
+pipe_match_json: true
+
