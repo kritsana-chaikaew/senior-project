@@ -21,7 +21,7 @@ index: login*
 
 # (Required)
 # Rule name, must be unique
-name: Login Cardinality rule
+name: Multiple Device Login rule
 
 # (Required)
 # Type of alert.
@@ -30,11 +30,13 @@ type: cardinality
 
 # (Required, cardinality specific)
 # Count the number of unique values for this field
-cardinality_field: "user"
+cardinality_field:
+  script:
+    source: "[ doc['user'].value, doc['mac_address'].value ]"
 
 # (Required, frequency specific)
-# Alert when there less than 15 unique hostnames
-min_cardinality: 1
+# Alert when there less than 1 unique hostnames
+max_cardinality: 2
 
 timestamp_type: "unix_ms"
 timestamp_field: "login_timestamp"
@@ -55,19 +57,9 @@ filter:
 # (Required)
 # The alert is use when a match is found
 alert:
-  - "linenotify":
-      linenotify_access_token: "Cn9gdHYTmZuictvyV88bd6OE9BtODOwADr6jYZeOmFs"
-#  - "email":
-#      email: "kritsana.chai@ku.th"
-#- command:
-#    command: "/bin/cat"
+- command:
+   command: "/bin/cat"
 
-#linenotify:
 
 pipe_match_json: true
-
-# (required, email specific)
-# a list of email addresses to send alerts to
-#email:
-#- "elastalert@example.com"
 
