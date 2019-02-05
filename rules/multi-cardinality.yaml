@@ -1,0 +1,30 @@
+name: "Multi Cardinality"
+type: "elastalert_modules.anomaly_rules.MultiCardinality"
+index: 'login*'
+max_threshold: 3
+metric_agg_keys: ['user', 'mac_address']
+metric_agg_type: 'cardinality'
+timestamp_type: "unix_ms"
+timestamp_field: "login_timestamp"
+realert:
+  minutes: 0
+doc_type: '_doc'
+buffer_time:
+  minutes: 15
+alert:
+  - "linenotify":
+      linenotify_access_token: "Cn9gdHYTmZuictvyV88bd6OE9BtODOwADr6jYZeOmFs"
+  - "command":
+      command: "/bin/cat"
+
+rule_name: "Multiple Log in"
+alert_text: |
+
+  Anomaly detected!
+  at {0}
+  Some user log in by {1} devices
+  review http://10.3.132.180/review
+alert_text_type: alert_text_only
+alert_text_args:
+  - 'login_timestamp'
+  - 'metric_usermac_address_cardinality'
