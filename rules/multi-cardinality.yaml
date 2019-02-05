@@ -1,13 +1,13 @@
 name: "Multi Cardinality"
 type: "elastalert_modules.anomaly_rules.MultiCardinality"
 index: 'login*'
-# Alert if admin, userXYZ or foobaz log in between 8 PM and midnight
-min_threshold: 1
+max_threshold: 3
 metric_agg_keys: ['user', 'mac_address']
 metric_agg_type: 'cardinality'
 timestamp_type: "unix_ms"
 timestamp_field: "login_timestamp"
-
-# We require the username field from documents
+doc_type: '_doc'
+buffer_time:
+  minutes: 15
 alert:
 - debug
