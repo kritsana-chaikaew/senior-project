@@ -1,18 +1,22 @@
-name: Login Flatline rule
+name: Login Flatline in Daytime rule
 type: flatline
-index: login-*
-threshold: 30
+index: login*
+threshold: 4000
+timestamp_type: "unix_ms"
+timestamp_field: "login_timestamp"
 timeframe:
-  minutes: 15
-realert:
-  minutes: 15
-filter:
-- term:
-    agent_type: "login-page"
+  hours: 1
 use_count_query: true
 doc_type: _doc
+filter:
+- terms:
+    agent_type: ["login-page","RELOGIN"]
+- script:
+    script:
+      source: (doc.login_timestamp.value.getHour()) % 24 >= 8 && (doc.login_timestamp.value.getHour()) % 24 <= 16
+      lang: painless
 alert:
- - email:
+- email:
     email: "kritsana.chai@ku.th"
- - command:
+- command:
     command: ["/bin/cat"]
