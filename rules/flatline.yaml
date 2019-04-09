@@ -6,17 +6,19 @@ timestamp_type: "unix_ms"
 timestamp_field: "login_timestamp"
 timeframe:
   hours: 1
-use_count_query: true
+run_every:
+  hours: 1
+buffer_time:
+  hours: 1
 doc_type: _doc
 filter:
 - terms:
     agent_type: ["login-page","RELOGIN"]
 - script:
-    script:
-      source: (doc.login_timestamp.value.getHour()) % 24 >= 8 && (doc.login_timestamp.value.getHour()) % 24 <= 16
+    script: 
+      source: (doc.login_timestamp.value.getHour() + 7) % 24 >= 8 && (doc.login_timestamp.value.getHour() + 7) % 24 <= 16
       lang: painless
+pipe_match_json: true
 alert:
-- email:
-    email: "kritsana.chai@ku.th"
 - command:
-    command: ["/bin/cat"]
+    command: "/bin/cat"
